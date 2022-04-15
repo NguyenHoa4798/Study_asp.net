@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.DataTransferObjects.Companies
+namespace Entities.DataTransferObjects
 {
     public class CompanyDto
     {

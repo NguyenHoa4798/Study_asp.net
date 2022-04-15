@@ -34,14 +34,18 @@ namespace Test
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAutoMapper(typeof(Startup));
             services.ConfigureRepositoryManager();
             services.ConfigureSqlContext(Configuration);
             services.ConfigureCors();
             services.ConfigureIISIntegration();
-            services.AddControllers();
             services.ConfigureLoggerService();
-            services.AddSwaggerGen(c =>
+            services.AddAutoMapper(typeof(Startup));
+            services.AddControllers(config =>
+            {
+                config.RespectBrowserAcceptHeader = true;
+                config.ReturnHttpNotAcceptable = true;
+            }).AddXmlDataContractSerializerFormatters().AddCustomCSVFormatter();
+                        services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Test", Version = "v1" });
             });
