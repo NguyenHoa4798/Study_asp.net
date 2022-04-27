@@ -55,6 +55,8 @@ namespace Test
                 options.SuppressModelStateInvalidFilter = true;
             });
             services.AddScoped<ValidationFilterAttribute>();
+            services.AddScoped<ValidateCompanyExistsAttribute>();
+            services.AddScoped<ValidateEmployeeForCompanyExistsAttribute>();
 
         }
 

@@ -31,9 +31,9 @@ namespace Test
         {
             var response = context.HttpContext.Response;
             var buffer = new StringBuilder();
-            if (context.Object is IEnumerable<CompanyDto>)
+            if (context.Object is IEnumerable<CompanyDto> enumerable)
             {
-                foreach (var company in (IEnumerable<CompanyDto>)context.Object)
+                foreach (var company in enumerable)
                 {
                     FormatCsv(buffer, company);
                 }

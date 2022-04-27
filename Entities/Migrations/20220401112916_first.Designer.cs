@@ -11,7 +11,7 @@ namespace Entities.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
     [Migration("20220401112916_first")]
-    partial class first
+    partial class First
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -12,7 +12,7 @@ namespace Test.Controllers
     [ApiController]
     public class LogsController : ControllerBase
     {
-        private ILoggerManager _logger;
+        private readonly ILoggerManager _logger;
         public LogsController(ILoggerManager logger)
         {
             _logger = logger;
