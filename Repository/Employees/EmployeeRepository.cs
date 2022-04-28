@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Repository.Extensions;
+
 
 namespace Repository.Employees
 {
@@ -20,9 +22,11 @@ namespace Repository.Employees
         public async Task<PagedList<Employee>> GetEmployeesAsync(Guid companyId,
         EmployeeParameters employeeParameters, bool trackChanges)
         {
-            var employees = await FindByCondition(e => e.CompanyId.Equals(companyId),
-           trackChanges)
-            .OrderBy(e => e.Name)
+            var employees = await FindByCondition(e => e.CompanyId.Equals(companyId),trackChanges)
+            .FilterEmployees(employeeParameters.MinAge, employeeParameters.MaxAge)
+            .Search(employeeParameters.SearchTerm)
+                        .OrderBy(e => e.Name)
+            .Sort(employeeParameters.OrderBy)
             .Skip((employeeParameters.PageNumber - 1) * employeeParameters.PageSize)
             .Take(employeeParameters.PageSize)
             .ToListAsync();
