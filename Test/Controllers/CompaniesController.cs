@@ -3,6 +3,7 @@ using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using LoggerService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -61,7 +62,7 @@ namespace Test.Controllers
             var ids = string.Join(",", companyCollectionToReturn.Select(c => c.Id));
             return CreatedAtRoute("CompanyCollection", new { ids }, companyCollectionToReturn);
         }
-        [HttpGet]
+        [HttpGet(Name = "GetCompanies"), Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetCompanies()
         {
             var companies = await _repository.Company.GetAllCompaniesAsync(trackChanges:false);

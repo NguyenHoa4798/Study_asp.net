@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using NLog;
+using Repository;
 using Repository.DataShaping;
 using System;
 using System.Collections.Generic;
@@ -51,7 +52,9 @@ namespace Test
             }).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters().AddCustomCSVFormatter();
                         services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Test", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Study ASP.NET CORE 5.0", 
+                                                     Version = "v1", 
+                                                     Description = "An ASP.NET Core Web API for study"});
             });
             services.Configure<ApiBehaviorOptions>(options =>
             {
@@ -61,6 +64,10 @@ namespace Test
             services.AddScoped<ValidateCompanyExistsAttribute>();
             services.AddScoped<ValidateEmployeeForCompanyExistsAttribute>();
             services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();
+            services.AddAuthentication();
+            services.ConfigureIdentity();
+            services.ConfigureJWT(Configuration);
+            services.AddScoped<IAuthenticationManager, AuthenticationManager>();
 
         }
 
@@ -71,7 +78,10 @@ namespace Test
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Test v1"));
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Test v1");
+                });
             }
             else
             {
@@ -88,12 +98,15 @@ namespace Test
             });
             app.UseRouting();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+
         }
     }
 }
