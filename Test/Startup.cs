@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -50,12 +51,8 @@ namespace Test
                 config.RespectBrowserAcceptHeader = true;
                 config.ReturnHttpNotAcceptable = true;
             }).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters().AddCustomCSVFormatter();
-                        services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Study ASP.NET CORE 5.0", 
-                                                     Version = "v1", 
-                                                     Description = "An ASP.NET Core Web API for study"});
-            });
+            services.ConfigureSwagger();
+
             services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.SuppressModelStateInvalidFilter = true;
@@ -68,7 +65,8 @@ namespace Test
             services.ConfigureIdentity();
             services.ConfigureJWT(Configuration);
             services.AddScoped<IAuthenticationManager, AuthenticationManager>();
-
+            services.AddResponseCaching();
+            services.ConfigureResponseCaching();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,10 +76,12 @@ namespace Test
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c =>
+                app.UseSwaggerUI(s =>
                 {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Test v1");
+                    s.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
+                    s.SwaggerEndpoint("/swagger/v2/swagger.json", "API v2");
                 });
+
             }
             else
             {
@@ -92,6 +92,7 @@ namespace Test
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCors("CorsPolicy");
+            app.UseResponseCaching();
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.All

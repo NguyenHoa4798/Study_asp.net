@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Test</name>
+    </assembly>
+    <members>
+        <member name="M:Test.Controllers.CompaniesController.GetCompanies">
+            <summary>
+            Gets list company
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

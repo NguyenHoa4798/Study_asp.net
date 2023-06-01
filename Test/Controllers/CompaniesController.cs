@@ -62,7 +62,11 @@ namespace Test.Controllers
             var ids = string.Join(",", companyCollectionToReturn.Select(c => c.Id));
             return CreatedAtRoute("CompanyCollection", new { ids }, companyCollectionToReturn);
         }
-        [HttpGet(Name = "GetCompanies"), Authorize(Roles = "Manager")]
+        /// <summary>
+        /// Gets list company
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet(Name = "GetCompanies"), Authorize(Roles = "")]
         public async Task<IActionResult> GetCompanies()
         {
             var companies = await _repository.Company.GetAllCompaniesAsync(trackChanges:false);
@@ -70,6 +74,7 @@ namespace Test.Controllers
             return Ok(companiesDto);
         }
         [HttpGet("{id}", Name = "CompanyById")]
+        [ResponseCache(Duration = 60)]
         public async Task<IActionResult> GetCompany(Guid id)
         {
             var company = await _repository.Company.GetCompanyAsync(id, trackChanges: false);
